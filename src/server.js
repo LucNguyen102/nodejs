@@ -1,11 +1,18 @@
 const express = require('express');
 const path = require('path');
-const app = express();
-const port = 8081;
+require('dotenv').config();
 
+console.log(process.env);
+
+const app = express();
+const port = process.env.PORT || 8888;
+const hostname = process.env.HOST_NAME;
 // Cấu hình template engine
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
+
+//config static files
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Các route cơ bản
 app.get('/', (req, res) => {
@@ -13,7 +20,7 @@ app.get('/', (req, res) => {
 });
 
 app.get('/abc', (req, res) => {
-  res.send('what the hell');
+  res.send('what the hell Luc');
 });
 
 app.get('/LucNguyen', (req, res) => {
@@ -21,6 +28,6 @@ app.get('/LucNguyen', (req, res) => {
 });
 
 // Khởi động server
-app.listen(port, () => {
+app.listen(port, hostname, () => {
   console.log(`Example app listening on port ${port}`);
 });
