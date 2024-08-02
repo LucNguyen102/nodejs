@@ -1,18 +1,27 @@
 require('dotenv').config();
 const express = require('express');
-const path = require('path');
 const configViewEngine = require('./config/viewEngine');
 const webRoutes = require('./routes/web');
-console.log(process.env);
+const connection = require('./config/database');
 
 const app = express();
 const port = process.env.PORT || 8888;
-const hostname = process.env.HOST_NAME;
+const hostname = process.env.HOST_NAME || 'localhost';
+
 // Cấu hình template engine
 configViewEngine(app);
 
-app.use('/',webRoutes);
-// Khởi động server
-app.listen(port, hostname, () => {
-  console.log(`Example app listening on port ${port}`);
+app.use('/', webRoutes);
+
+connection.query('select * from Users u', function (err, results, fields) {
+    if (err) {
+        console.error("Database query error: ", err);
+        return;
+    }
+    console.log(">>>results= ", results); // results contains rows returned by server
 });
+
+app.listen(port, hostname, () => {
+    console.log(`Example app listening on port ${port}`);
+});
+
